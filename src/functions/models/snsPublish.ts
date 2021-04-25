@@ -9,29 +9,28 @@ class SNSPublish implements PublishInterface{
         try{
             const doSnsPub = new SNS({region : 'us-west-2'});
 
-            const msg : object ={
-                provider : "mailgun",
-                timestamp: data.signature.timestamp,
-                type : data['event-data'].event
-            }
+            const msg : string =`{
+                "provider" : "mailgun",
+                "timestamp": "${data.signature.timestamp}",
+                "type" : "${data['event-data'].event}"
+            }`
 
             const param : SNS.PublishInput= {
-                MessageStructure : 'json',
-                Message : JSON.stringify(msg),
+                Message : msg,
                 TopicArn : process.env.TOPIC_ARN
             }
         
-            const result = await doSnsPub.publish(param).promise();
-            if (result.MessageId !== null || result.MessageId !== undefined){
+            const result = await doSnsPub.publish(param).promise()
+               
+            if (result !== null || result !== undefined){
                 
                 return result.MessageId
             }else{
                 return null
             }
         } catch (error) {
-            
+            return null
         }
-        throw new Error('Method not implemented.')
     }
     
 }

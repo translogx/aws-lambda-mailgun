@@ -1,20 +1,33 @@
 import { IMailGunIncomingData } from '@functions/mailGunCallback/schema';
 import {StoreInterface} from '@functions/interfaces/IStoreInterface'
 import { DynamoDB } from 'aws-sdk' 
+import { responseInterface } from '../interfaces/IResponseInterface';
+import { v4 as uuidv4 } from 'uuid'
 
 class DynamoStore implements StoreInterface{
 
-     save(data: IMailGunIncomingData): Promise<boolean> {
+     async save(data: IMailGunIncomingData): Promise<responseInterface> {
          
         const docClient = new DynamoDB.DocumentClient({region : 'us-west-2'});
+        const dataTopersist = {
+            id : uuidv4(),
+            mailgunEventOject: data
+        }
 
-        return docClient.put({Item:data, TableName: process.env.DYNAMO_TABLE}).promise().then(() => {
-            console.log(`passed 1`)
-            return true
-        }).catch((err) =>{
-            console.log(err)
-            return false
-        })
+        try {
+             await docClient.put({ Item: dataTopersist, TableName: process.env.DYNAMO_TABLE }).promise();
+             console.log(`passed 1`);
+             return {
+                 status: true,
+                 msg : "success"
+             };
+         } catch (err) {
+             console.log(err);
+             return {
+                 status: false,
+                 msg : err.message
+             };
+         }
         
     }
 
