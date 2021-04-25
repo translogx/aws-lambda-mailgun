@@ -4,8 +4,8 @@ import { DynamoDB } from 'aws-sdk'
 
 class DynamoStore implements StoreInterface{
 
-     Save(data: IMailGunIncomingData): Promise<boolean> {
-        console.log (`mongo data is ${data}`)
+     save(data: IMailGunIncomingData): Promise<boolean> {
+         
         const docClient = new DynamoDB.DocumentClient({region : 'us-west-2'});
 
         return docClient.put({Item:data, TableName: process.env.DYNAMO_TABLE}).promise().then(() => {

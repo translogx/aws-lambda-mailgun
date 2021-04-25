@@ -3,7 +3,7 @@ import {StoreInterface} from '@functions/interfaces/IStoreInterface'
 
 class MongoStore implements StoreInterface{
 
-    Save(data: IMailGunIncomingData): Promise<boolean> {
+    save(data: IMailGunIncomingData): Promise<boolean> {
         console.log (`mongo data is ${data}`)
         return
     }

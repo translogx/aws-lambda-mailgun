@@ -1,4 +1,4 @@
 import {IMailGunIncomingData} from '@functions/mailGunCallback/schema'
 export interface StoreInterface {
-    Save( data: IMailGunIncomingData ): Promise<boolean>
+    save( data: IMailGunIncomingData ): Promise<boolean>
 }

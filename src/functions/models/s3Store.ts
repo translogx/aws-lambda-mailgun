@@ -3,7 +3,7 @@ import {StoreInterface} from '@functions/interfaces/IStoreInterface'
 
 class S3Store implements StoreInterface{
     
-    Save(data: IMailGunIncomingData): Promise<boolean> {
+    save(data: IMailGunIncomingData): Promise<boolean> {
         console.log (`s3 data is ${data}`)
         return
     }
