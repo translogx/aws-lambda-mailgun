@@ -20,9 +20,9 @@ class Handler{
       const body : any = event.body
       const request : IMailGunIncomingData  = body as IMailGunIncomingData//JSON.parse(body);
       
-      // if (!this.validateData(process.env.KEY,request.signature.timestamp, request.signature.token, request.signature.signature)){
-      //   throw new Error("Invalid Event");
-      // }
+      if (!this.validateData(process.env.MAILGUN_SIGN_KEY,request.signature.timestamp, request.signature.token, request.signature.signature)){
+        throw new Error("Invalid Event");
+      }
   
       //store incoming event
       const store : StoreInterface = new StoreFactory(process.env.STORE).getStore()
