@@ -10,6 +10,7 @@ import { StoreFactory } from '@functions/factory/storeFactory'
 import { PublisherFactory } from '@functions/factory/pubsubFactory'
 import {IMailGunIncomingData} from './schema';
 import { createHmac } from 'crypto';
+import {mailGunService} from '@functions/services/mailgunService'
 
 
 class Handler{
@@ -19,8 +20,10 @@ class Handler{
       // parsereques
       const body : any = event.body
       const request : IMailGunIncomingData  = body as IMailGunIncomingData//JSON.parse(body);
-      
-      if (!this.validateData(process.env.MAILGUN_SIGN_KEY,request.signature.timestamp, request.signature.token, request.signature.signature)){
+
+      //validate incoming data
+      const isValid = mailGunService.validateData(process.env.MAILGUN_SIGN_KEY,request.signature.timestamp, request.signature.token, request.signature.signature);
+      if ( isValid !== true){
         throw new Error("Invalid Event");
       }
   
@@ -66,14 +69,6 @@ class Handler{
     
   }
 
-  private validateData(signingKey : string, timestamp : string, token : string, signature : string  ): boolean {
-             
-    const encodedToken = createHmac('sha256', signingKey)
-    .update(timestamp.concat(token))
-    .digest('hex')
-
-    return (encodedToken === signature);
-}
 }
 
 const handlers = new Handler();
